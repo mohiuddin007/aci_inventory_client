@@ -6,10 +6,10 @@ import { loginSchema, signupSchema } from "@/utils/validation";
 import { LoginCredentials, SignupCredentials } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser, registerUser } from "@/lib/api/auth";
-// import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext"; // Import the auth context
 
 export default function AuthForm({ type }: { type: "login" | "signup" }) {
-  // const router = useRouter();
+  const { login } = useAuth();
   const isLogin = type === "login";
 
   const {
@@ -22,8 +22,8 @@ export default function AuthForm({ type }: { type: "login" | "signup" }) {
 
   const mutation = useMutation({
     mutationFn: isLogin ? loginUser : registerUser,
-    onSuccess: () => {
-      // router.push("/dashboard"); 
+    onSuccess: (data) => {
+      login(data.access_token); // Save token and redirect
     },
     onError: (error) => {
       console.error("Authentication failed:", error);
@@ -41,20 +41,6 @@ export default function AuthForm({ type }: { type: "login" | "signup" }) {
           {isLogin ? "Login" : "Sign Up"}
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-          {/* {!isLogin && (
-            <div className="mb-4">
-              <label className="block text-gray-700">Name</label>
-              <input
-                {...register("name")}
-                className="w-full px-3 py-2 border rounded-lg"
-                placeholder="Enter name"
-              />
-              {errors.name && (
-                <p className="text-red-500">{errors.name.message}</p>
-              )}
-            </div>
-          )} */}
-
           <div className="mb-4">
             <label className="block text-gray-700">Username</label>
             <input

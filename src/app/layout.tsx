@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import NavBar from "@/components/top-bar";
+import { AuthProvider } from "@/context/AuthContext";
+import ClientLayout from "@/components/ClientLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,21 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Providers>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-[100%]">
-              <NavBar />
-
-              {children}
-            </main>
-          </SidebarProvider>
-        </Providers>
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Providers>
+            <ClientLayout>{children}</ClientLayout>
+          </Providers>
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

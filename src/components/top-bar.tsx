@@ -2,13 +2,13 @@
 
 import { User } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useAuth } from "@/context/AuthContext";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const { logout, user } = useAuth();
 
   return (
     <nav className="bg-light text-dark shadow-md">
@@ -29,14 +29,11 @@ const NavBar = () => {
 
           {isOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md overflow-hidden">
-              <Link
-                href="/profile"
-                className="block px-4 py-2 hover:bg-gray-100"
-              >
-                Profile
+              <Link href="#" className="block px-4 py-2 hover:bg-gray-100">
+                {user?.username}
               </Link>
               <button
-                onClick={() => router.push("/logout")}
+                onClick={() => logout()}
                 className="w-full text-left px-4 py-2 hover:bg-gray-100"
               >
                 Logout
