@@ -33,7 +33,7 @@ export default function ScanPage() {
       setError("Product not found or API error.");
     },
   });
-  console.log(product);
+
   const saveProductMutation = useMutation({
     mutationFn: saveProduct,
     onError: () => setError("Error saving product to database."),

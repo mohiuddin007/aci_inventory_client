@@ -4,6 +4,9 @@ import { DndContext, closestCorners } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { useState } from "react";
 import CategoryColumn from "./CategoryColumn";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCategories } from "@/lib/api/category";
+import { Category } from "@/types/products";
 
 const initialData = {
   categories: ["Uncategorized", "Electronics", "Groceries"],
@@ -15,7 +18,14 @@ const initialData = {
 };
 
 export default function KanbanBoard() {
-  const [categories, setCategories] = useState(initialData.categories);
+    const { data: categories, error, isLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+  });
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error loading categories</p>;
+  // const [categories, setCategories] = useState(initialData.categories);
   const [products, setProducts] = useState(initialData.products);
 
   const onDragEnd = (event) => {
@@ -36,11 +46,11 @@ export default function KanbanBoard() {
     <DndContext collisionDetection={closestCorners} onDragEnd={onDragEnd}>
       <div className="flex gap-4 overflow-auto p-4">
         <SortableContext items={categories}>
-          {categories.map((category) => (
+          {categories.map((category: Category) => (
             <CategoryColumn
-              key={category}
-              category={category}
-              products={products.filter((p) => p.category === category)}
+              key={category?.id}
+              category={category?.name}
+              products={products.filter((p) => p.category === category?.name)}
             />
           ))}
         </SortableContext>
