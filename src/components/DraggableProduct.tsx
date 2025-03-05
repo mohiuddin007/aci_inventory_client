@@ -7,7 +7,7 @@ export default function DraggableProduct({ product }: { product: Product }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: product.barcode,
   });
-  console.log(product);
+  
   return (
     <div
       ref={setNodeRef}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -16,8 +16,14 @@ type FormValues = {
   barcode: string;
 };
 
+interface Barcode {
+  rawValue: string;
+}
+
 export default function ScanPage() {
   const { register, handleSubmit, setValue } = useForm<FormValues>();
+  const [isScanning, setIsScanning] = useState(false);
+  const lastScannedBarcode = useRef<string | null>(null);
   const [product, setProduct] = useState<Product | null>(null);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -25,6 +31,7 @@ export default function ScanPage() {
   const fetchProductMutation = useMutation({
     mutationFn: fetchProductByBarcode,
     onSuccess: (data) => {
+      setIsScanning(false);
       setProduct({ ...data.product, category: "Uncategorized" });
       saveProductMutation.mutate({
         ...data.product,
@@ -32,6 +39,7 @@ export default function ScanPage() {
       });
     },
     onError: (error) => {
+      setIsScanning(false);
       console.error("Fetch Error:", error);
       setError("Product not found or API error.");
     },
@@ -42,13 +50,18 @@ export default function ScanPage() {
     onError: () => setError("Error saving product to database."),
   });
 
-  // const handleScan = (scannedData: string | null) => {
-  //   if (scannedData) {
-  //     console.log("Scanned barcode:", scannedData);
-  //     setValue("barcode", scannedData);
-  //     fetchProductMutation.mutate(scannedData);
-  //   }
-  // };
+  const handleScan = (barcodes: Barcode[]) => {
+    if (barcodes.length > 0) {
+      const scannedData = barcodes[0].rawValue;
+
+      if (scannedData === lastScannedBarcode.current) return; // Prevent duplicate scans
+      lastScannedBarcode.current = scannedData;
+
+      console.log("Scanned barcode:", scannedData);
+      setValue("barcode", scannedData);
+      fetchProductMutation.mutate(scannedData);
+    }
+  };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (data.barcode) {
@@ -68,17 +81,23 @@ export default function ScanPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <BarcodeScanner
-            onCapture={(barcodes) => {
-              console.log(barcodes)
-              if (barcodes.length > 0) {
-                const scannedData = barcodes[0].rawValue; // Extract the barcode value
-                console.log("Scanned barcode:", scannedData);
-                setValue("barcode", scannedData);
-                fetchProductMutation.mutate(scannedData);
-              }
-            }}
-          />
+          {!isScanning && (
+            <div className="flex justify-center">
+              <Button onClick={() => setIsScanning(true)}>Open Scanner</Button>
+            </div>
+          )}
+
+          {isScanning && (
+            <div className="mt-4">
+              <BarcodeScanner
+                options={{ formats: ["ean_13", "upc_a", "code_128"] }}
+                onCapture={handleScan}
+              />
+              <Button className="mt-2" onClick={() => setIsScanning(false)}>
+                Close Scanner
+              </Button>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
             <Input
