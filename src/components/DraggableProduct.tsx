@@ -3,7 +3,7 @@
 import { useDraggable } from "@dnd-kit/core";
 
 export default function DraggableProduct({ product }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: product.id });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: product.barcode });
 
   return (
     <div

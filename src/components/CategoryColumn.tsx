@@ -11,7 +11,7 @@ export default function CategoryColumn({ category, products }) {
       <h2 className="font-bold text-lg mb-2">{category}</h2>
       <div className="space-y-2">
         {products.map((product) => (
-          <DraggableProduct key={product.id} product={product} />
+          <DraggableProduct key={product.barcode} product={product} />
         ))}
       </div>
     </div>
