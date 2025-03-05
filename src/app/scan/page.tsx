@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { fetchProductByBarcode, saveProduct } from "@/lib/api/products";
-import BarcodeReader from "react-barcode-reader";
+import { BarcodeScanner } from "react-barcode-scanner";
+import "react-barcode-scanner/polyfill";
 import { Product } from "@/types/products";
 
 type FormValues = {
@@ -41,15 +42,15 @@ export default function ScanPage() {
     onError: () => setError("Error saving product to database."),
   });
 
-  const handleScan = (scannedData: string) => {
-    if (scannedData) {
-      console.log("Scanned barcode:", scannedData);
-      setValue("barcode", scannedData);
-      fetchProductMutation.mutate(scannedData);
-    }
-  };
+  // const handleScan = (scannedData: string | null) => {
+  //   if (scannedData) {
+  //     console.log("Scanned barcode:", scannedData);
+  //     setValue("barcode", scannedData);
+  //     fetchProductMutation.mutate(scannedData);
+  //   }
+  // };
 
-  const onSubmit: SubmitHandler<FormValues> = (data: { barcode: string }) => {
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (data.barcode) {
       fetchProductMutation.mutate(data.barcode);
     }
@@ -67,10 +68,18 @@ export default function ScanPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <BarcodeReader
-            onScan={handleScan}
-            onError={() => setError("Scanning error")}
+          <BarcodeScanner
+            onCapture={(barcodes) => {
+              console.log(barcodes)
+              if (barcodes.length > 0) {
+                const scannedData = barcodes[0].rawValue; // Extract the barcode value
+                console.log("Scanned barcode:", scannedData);
+                setValue("barcode", scannedData);
+                fetchProductMutation.mutate(scannedData);
+              }
+            }}
           />
+
           <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
             <Input
               type="text"
