@@ -1,37 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Inventory Management System
 
-## Getting Started
+## 📌 Overview
+This is an **Inventory Management System** built with **Next.js**. It provides an efficient way to manage products, categories, and inventory using modern web technologies. The application includes barcode scanning, authentication, real-time data fetching, and a responsive UI.
 
-First, run the development server:
+## 🚀 Tech Stack
+This project uses the following technologies:
 
+- **Next.js** – A powerful React framework for SSR, SSG, and client-side rendering.
+- **React Query (@tanstack/react-query)** – For efficient data fetching and state management.
+- **Axios** – For making API requests in a structured way.
+- **ShadCN** – A modern UI library with Radix components and TailwindCSS for styling.
+- **JWT (JSON Web Token)** – For authentication and user session management.
+- **React Barcode Reader** – Enables barcode scanning functionality for inventory management.
+- **React Hook Form** – Simplifies form handling with validation.
+- **TailwindCSS** – Utility-first CSS framework for styling.
+
+## 🛠 Installation & Setup
+### 1️⃣ Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/mohiuddin007/aci_inventory_client.git
+cd aci_inventory_client
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Install Dependencies
+```bash
+yarn  # Or use npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3️⃣ Configure Environment Variables
+Create a `.env` file and set up the necessary environment variables:
+```env
+NEXT_PUBLIC_REST_API_ENDPOINT=http://your-api-url.com
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4️⃣ Start the Development Server
+```bash
+yarn dev  # Or use npm run dev
+```
+Your application will be available at `http://localhost:3000`
 
-## Learn More
+## 🔥 Features
+✅ User authentication with JWT  
+✅ Inventory tracking & barcode scanning  
+✅ Real-time data fetching with React Query  
+✅ Responsive UI with TailwindCSS and ShadCN  
+✅ Form validation using React Hook Form  
 
-To learn more about Next.js, take a look at the following resources:
+## 🌐 Live Demo
+If you have deployed your project, provide the live demo link here:  
+🔗 [Live Demo](https://your-live-demo-url.com)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# aci_inventory_client

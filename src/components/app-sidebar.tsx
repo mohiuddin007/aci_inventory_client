@@ -1,4 +1,9 @@
-import { LayoutDashboard, ScanFace, SquareKanban } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOutIcon,
+  ScanFace,
+  SquareKanban,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -10,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/context/AuthContext";
 
 // Menu items.
 const items = [
@@ -31,6 +37,7 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { logout } = useAuth();
   return (
     <Sidebar>
       <SidebarContent>
@@ -48,6 +55,18 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href={`#`} onClick={() => logout()}>
+                    <LogOutIcon />
+                    <span>Logout</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <button
+                onClick={() => logout()}
+                className="w-full text-left px-4 py-2 hover:bg-gray-100"
+              ></button>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -7,6 +7,8 @@ import { LoginCredentials, SignupCredentials } from "@/types/auth";
 import { useMutation } from "@tanstack/react-query";
 import { loginUser, registerUser } from "@/lib/api/auth";
 import { useAuth } from "@/context/AuthContext"; // Import the auth context
+import { toast } from "sonner";
+import Link from "next/link";
 
 export default function AuthForm({ type }: { type: "login" | "signup" }) {
   const { login } = useAuth();
@@ -23,7 +25,8 @@ export default function AuthForm({ type }: { type: "login" | "signup" }) {
   const mutation = useMutation({
     mutationFn: isLogin ? loginUser : registerUser,
     onSuccess: (data) => {
-      login(data.access_token); // Save token and redirect
+      login(data.access_token);
+      toast("Successfully logged in");
     },
     onError: (error) => {
       console.error("Authentication failed:", error);
@@ -74,6 +77,23 @@ export default function AuthForm({ type }: { type: "login" | "signup" }) {
           >
             {isSubmitting ? "Processing..." : isLogin ? "Login" : "Sign Up"}
           </button>
+          <p className="mt-4 text-center text-gray-600">
+            {isLogin ? (
+              <>
+                {`Don't`} have an account?{" "}
+                <Link href="/signup" className="text-blue-600 hover:underline">
+                  Sign Up
+                </Link>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <Link href="/login" className="text-blue-600 hover:underline">
+                  Login
+                </Link>
+              </>
+            )}
+          </p>
         </form>
       </div>
     </div>

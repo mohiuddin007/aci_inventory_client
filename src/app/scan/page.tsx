@@ -24,7 +24,6 @@ export default function ScanPage() {
   const fetchProductMutation = useMutation({
     mutationFn: fetchProductByBarcode,
     onSuccess: (data) => {
-      console.log("Mutation Success Data:", data);
       setProduct({ ...data.product, category: "Uncategorized" });
       saveProductMutation.mutate({ ...data.product, category: "Uncategorized" });
     },
