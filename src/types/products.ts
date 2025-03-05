@@ -16,3 +16,9 @@ export interface BarcodeScanResponse {
   status: boolean;
   product: Partial<Product>;
 }
+
+
+export interface ProductCount {
+  _id: string;
+  count: number;
+}
