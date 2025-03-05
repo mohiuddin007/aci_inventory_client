@@ -14,13 +14,11 @@ import { API_ENDPOINTS } from "@/lib/api_endpoints";
 export default function KanbanBoard() {
   const queryClient = useQueryClient();
 
-  // State to ensure fetching only runs on client
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Fetch categories
   const {
     data: categories = [],
     isLoading: isLoadingCategories,
@@ -28,7 +26,7 @@ export default function KanbanBoard() {
   } = useQuery({
     queryKey: [API_ENDPOINTS.CATEGORIES],
     queryFn: fetchCategories,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    staleTime: 1000 * 60 * 5, 
   });
 
   // Fetch products once categories are available
@@ -39,20 +37,19 @@ export default function KanbanBoard() {
   } = useQuery({
     queryKey: [API_ENDPOINTS.PRODUCTS],
     queryFn: () => fetchAllProducts(),
-    enabled: isClient && categories.length > 0, // Only run on client and when categories exist
+    enabled: isClient && categories.length > 0, 
   });
 
-  // Mutation for updating product category
   const updateCategoryMutation = useMutation({
     mutationFn: ({
       barcode,
       newCategory,
     }: {
       barcode: string;
-      newCategory: string;
+      newCategory: number | string;
     }) => updateProductCategory(barcode, newCategory),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.PRODUCTS] }); // Refetch products after update
+      queryClient.invalidateQueries({ queryKey: [API_ENDPOINTS.PRODUCTS] });
     },
   });
 

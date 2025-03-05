@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { parseCookies, destroyCookie } from "nookies";
 import { jwtDecode } from "jwt-decode";
@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 interface User {
   username: string;
   role: string;
-  exp: number; 
+  exp: number;
 }
 
 interface AuthContextType {
@@ -22,6 +22,14 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
+
+  const memoizedRouterPush = useCallback(() => router.push("/login"), [router]);
+
+  const logout = useCallback(() => {
+    destroyCookie(null, "auth-token");
+    setUser(null);
+    memoizedRouterPush(); 
+  }, [memoizedRouterPush]);
 
   useEffect(() => {
     const cookies = parseCookies();
@@ -38,14 +46,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           logout(); 
         } else {
           setUser(decoded);
-          setTimeout(logout, expiryTime - currentTime); 
+          setTimeout(logout, expiryTime - currentTime);
         }
       } catch (error) {
         console.error("Invalid token:", error);
         destroyCookie(null, "auth-token");
       }
     }
-  }, []);
+  }, [logout]); 
 
   const login = (token: string) => {
     document.cookie = `auth-token=${token}; path=/; max-age=${
@@ -56,12 +64,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(decoded);
 
     router.push("/");
-  };
-
-  const logout = () => {
-    destroyCookie(null, "auth-token");
-    setUser(null);
-    router.push("/login");
   };
 
   return (

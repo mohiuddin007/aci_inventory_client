@@ -48,7 +48,7 @@ export const fetchAllProducts = async (category?: string) => {
 
 export const updateProductCategory = async (
   barcode: string,
-  newCategory: string
+  newCategory: number | string
 ) => {
   try {
     const response = await axiosClient.put(

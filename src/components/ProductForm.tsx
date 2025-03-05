@@ -16,7 +16,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { saveProduct } from "@/lib/api/products";
 import { fetchCategories } from "@/lib/api/category";
-import { Category } from "@/types/products";
+import { Category, Product } from "@/types/products";
 import { toast } from "sonner";
 
 export default function ProductForm() {
@@ -27,7 +27,7 @@ export default function ProductForm() {
     reset,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<Product>({
     defaultValues: { barcode: generateBarcode() },
   });
   const queryClient = useQueryClient();
@@ -47,7 +47,7 @@ export default function ProductForm() {
     },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: Product) => {
     mutation.mutate(data);
   };
 
@@ -134,9 +134,7 @@ export default function ProductForm() {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={mutation.isLoading}>
-              {mutation.isLoading ? "Adding..." : "Add Product"}
-            </Button>
+            <Button type="submit">Add Product</Button>
           </div>
         </form>
       </DialogContent>

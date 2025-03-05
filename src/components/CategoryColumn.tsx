@@ -2,8 +2,15 @@
 
 import { useDroppable } from "@dnd-kit/core";
 import DraggableProduct from "./DraggableProduct";
+import { Product } from "@/types/products";
 
-export default function CategoryColumn({ category, products }) {
+export default function CategoryColumn({
+  category,
+  products,
+}: {
+  category: string;
+  products: Product[];
+}) {
   const { setNodeRef } = useDroppable({ id: category });
 
   return (
