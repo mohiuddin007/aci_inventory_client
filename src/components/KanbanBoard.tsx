@@ -18,15 +18,18 @@ const initialData = {
 };
 
 export default function KanbanBoard() {
-    const { data: categories, error, isLoading } = useQuery({
+  const [products, setProducts] = useState(initialData.products);
+  const {
+    data: categories,
+    error,
+    isLoading,
+  } = useQuery({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading categories</p>;
-  // const [categories, setCategories] = useState(initialData.categories);
-  const [products, setProducts] = useState(initialData.products);
 
   const onDragEnd = (event) => {
     const { active, over } = event;
@@ -36,9 +39,7 @@ export default function KanbanBoard() {
     if (!activeProduct) return;
 
     setProducts((prev) =>
-      prev.map((p) =>
-        p.id === active.id ? { ...p, category: over.id } : p
-      )
+      prev.map((p) => (p.id === active.id ? { ...p, category: over.id } : p))
     );
   };
 

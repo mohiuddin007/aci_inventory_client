@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 interface User {
   username: string;
   role: string;
+  exp: number; 
 }
 
 interface AuthContextType {
@@ -21,7 +22,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-console.log(user)
+
   useEffect(() => {
     const cookies = parseCookies();
     const token = cookies["auth-token"];
@@ -29,7 +30,16 @@ console.log(user)
     if (token) {
       try {
         const decoded = jwtDecode<User>(token);
-        setUser(decoded);
+        const expiryTime = decoded.exp * 1000;
+        const currentTime = Date.now();
+
+        if (expiryTime < currentTime) {
+          console.warn("Token expired. Logging out...");
+          logout(); 
+        } else {
+          setUser(decoded);
+          setTimeout(logout, expiryTime - currentTime); 
+        }
       } catch (error) {
         console.error("Invalid token:", error);
         destroyCookie(null, "auth-token");
