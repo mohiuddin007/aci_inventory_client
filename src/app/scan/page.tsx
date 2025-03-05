@@ -25,7 +25,10 @@ export default function ScanPage() {
     mutationFn: fetchProductByBarcode,
     onSuccess: (data) => {
       setProduct({ ...data.product, category: "Uncategorized" });
-      saveProductMutation.mutate({ ...data.product, category: "Uncategorized" });
+      saveProductMutation.mutate({
+        ...data.product,
+        category: "Uncategorized",
+      });
     },
     onError: (error) => {
       console.error("Fetch Error:", error);
@@ -56,7 +59,12 @@ export default function ScanPage() {
     <div className="flex flex-col items-center p-6">
       <Card className="w-full max-w-lg">
         <CardHeader>
-          <CardTitle>Scan Barcode</CardTitle>
+          <CardTitle>
+            Scan Barcode{" "}
+            <span className="text-sm">
+              (Retrieve details from an external API)
+            </span>
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <BarcodeReader
