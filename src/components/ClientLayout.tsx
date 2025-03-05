@@ -19,11 +19,15 @@ export default function ClientLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <main className="w-[100%]">
-        <NavBar />
-        <div>{children}</div>
-      </main>
+      <div className="flex w-full">
+        <div>
+          <AppSidebar />
+        </div>
+        <main className="flex-1 w-full">
+          <NavBar />
+          <div className="w-[100%]">{children}</div>
+        </main>
+      </div>
     </SidebarProvider>
   );
 }

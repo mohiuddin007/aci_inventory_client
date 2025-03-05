@@ -3,4 +3,5 @@ export const API_ENDPOINTS = {
     CATEGORIES: '/categories',
     LOGIN: '/auth/login',
     SIGNUP: '/auth/register',
-}
+    DASHBOARD: '/dashboard/analytics',
+  };

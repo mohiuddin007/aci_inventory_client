@@ -15,13 +15,12 @@ export default function CategoryForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<{ name: string }>();
   const queryClient = useQueryClient();
 
-  // API Mutation to add category
   const mutation = useMutation({
     mutationFn: saveCategory,
     onSuccess: () => {
       queryClient.invalidateQueries([API_ENDPOINTS.CATEGORIES]); // Refetch categories
       reset();
-      setOpen(false); // Close modal
+      setOpen(false); 
     },
   });
 
